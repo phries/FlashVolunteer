@@ -1,0 +1,13 @@
+.DS_Store
+.bundle
+.idea
+.project
+.svn
+config/database.yml
+db/*.sqlite3
+log/*.log
+tmp/
+development/
+public/stylesheets
+public/assets
+app/assets/css/application.css

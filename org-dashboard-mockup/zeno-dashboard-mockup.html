@@ -1,0 +1,551 @@
+<!DOCTYPE html>
+<!-- phil: client frameworwk files needed (merge the zip files into this dir): -->
+<!-- initializr bootstrap: http://www.initializr.com/builder?boot-hero&jquerymin&h5bp-iecond&h5bp-chromeframe&h5bp-analytics&h5bp-favicon&h5bp-appletouchicons&modernizrrespond&izr-emptyscript&boot-css&boot-scripts -->
+<!-- plus tablesorter: http://tablesorter.com/docs/#Download -->
+<!-- highcharts: http://code.highcharts.com/zips/Highcharts-4.0.1.zip -->
+<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js"> <!--<![endif]-->
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+        <title></title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        <link rel="stylesheet" href="css/bootstrap.min.css">
+        <style>
+            body {
+                padding-top: 50px;
+                padding-bottom: 20px;
+            }
+            .hide {
+                display: none !important
+            }
+            #mobile-header {
+                display: none;
+            }
+            @media only screen and (max-width: 767px){
+                #mobile-header {
+                    display: block;
+                }
+            }
+            table.topvolunteertable {
+                max-width: 650px;
+            }
+            .topvolunteertable th, .topvolunteertable td {
+                width:8%; text-align:center;
+                vertical-align: middle !important; /* override tablesorter class */
+                font-size: 14px;
+            }
+            .topvolunteertable th + th, .topvolunteertable td + td {
+                width:25%; text-align:left
+            }
+            .topvolunteertable th + th + th, .topvolunteertable td + td + td {
+                width:10%;
+            }
+            .topvolunteertable th + th + th + th, .topvolunteertable td + td + td + td {
+                width:45%;
+            }
+            .topvolunteertable th + th + th + th + th, .topvolunteertable td + td + td + td + td {
+                width:8%;
+            }
+        </style>
+        <link rel="stylesheet" href="css/bootstrap-theme.min.css">
+        <link rel="stylesheet" href="css/main.css">
+        <link rel="stylesheet" href="tablesorter/themes/blue/style.css">
+        <link rel="stylesheet" href="sidr/stylesheets/jquery.sidr.light.css">
+
+        <script src="js/vendor/modernizr-2.6.2-respond-1.1.0.min.js"></script>
+    </head>
+    <body>
+        <!--[if lt IE 7]>
+            <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
+        <![endif]-->
+
+    <!-- Side menu -->
+    <div id="sidr">
+      <ul>
+        <!--<li class="active"><a href="#">Dashboard</a></li>-->
+        <li><a href="#">Events</a></li>
+        <li><a href="#">Communication</a></li>
+        <li><a href="#">Record Hours</a></li>
+        <li><a href="#">Create Event</a></li>
+        <li><a href="#">Org Directory</a></li>
+      </ul>
+    </div>
+
+    <!-- Side menu button -->
+    <div>
+      <a href="#sidr" id="simple-menu" class="tiny button secondary radius"><span class="btn btn-info">Menu</span></a>
+    </div>
+
+    <!-- Main section of page -->
+    <div class="main">
+      <div class="container">
+        <h1>Volunteers for Zeno</h1>
+        <!--<p>Subtext.</p>-->
+        <!--<p><a class="btn btn-primary btn-lg" role="button">Learn more &raquo;</a></p>-->
+      </div>
+    </div>
+
+    <div class="container">
+      <div class="col-sm-3 placeholder vcenter">
+        <!--vertical spacing when the layout is columns-->
+        <div class="hidden-xs" style="margin-top: 30px"></div>
+        <div class="panel panel-info">
+          <div class="panel-heading">
+            <h3 class="panel-title">Totals</h3>
+          </div>
+          <div class="panel-body">
+            <p>Your volunteers have put in</p>
+            <!--<span class="btn btn-lg btn-success">371 hours</span>-->
+            <h2 style="color: green">1959 hours</h2>
+            <p>That's an average of <span style="color: green; font-size: 150%">6.0 hours</span> per volunteer!</p>
+          </div>
+        </div>
+      </div><!--
+      --><div class="col-sm-9 placeholder vcenter text-center">
+        <div class="container"><div class="col-sm-7"><!-- shift heading left slightly on desktop to center better over certain graphs -->
+          <h3>Recent Volunteer Hours</h3>
+          By: &nbsp;
+          <button id="day-btn"     class="btn"             type="button">Day</button>
+          <button id="month-btn"   class="btn btn-primary" type="button">Month</button>
+          <button id="quarter-btn" class="btn"             type="button">Quarter</button>
+        </div></div>
+        <div id="org-dashboard-chart-day"     class="hide"><!-- Javascript will create a graph here using this div's id --></div>
+        <div id="org-dashboard-chart-month"               ><!-- Javascript will create a graph here using this div's id --></div>
+        <div id="org-dashboard-chart-quarter" class="hide"><!-- Javascript will create a graph here using this div's id --></div>
+      </div>
+    </div>
+    <div class="container">
+      <div class="col-md-6 col-md-push-6"><!-- define the right-hand column first -->
+        <!--vertical spacing when the layout is columns-->
+        <div class="hidden-xs" style="margin-top: 75px"></div>
+        <div id="org-dashboard-chart-events"></div>
+      </div>
+      <div class="col-md-1 col-md-pull-1">
+        <p> </p>
+      </div>
+      <div class="col-md-5 col-md-pull-7">
+        <!--vertical spacing when the layout is columns-->
+        <div class="hidden-xs" style="margin-top: 75px"></div>
+        <h2>Top Volunteers of FY2014</h2>
+        <table id="orgVolunteersTable" class="tablesorter topvolunteertable" border="0" cellpadding="0" cellspacing="1">
+          <thead>
+            <tr>
+              <th><!-- profile image --></th>
+              <th>Name</th>
+              <th>Hours</th>
+              <th>Highest hours from</th>
+              <th><!-- props button --></th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><a href=""><img src="default-profile-pic-exsmall.png"></a></td>
+              <td><a href="">Joseph Pham</a></td>
+              <td>198.5</td>
+              <td><a href="">Ongoing Volunteers</a></td>
+              <td><a href=""><img src="props.png" width=35 height=35></a></td>
+            </tr>
+            <tr>
+              <td><a href=""><img src="default-profile-pic-exsmall.png"></a></td>
+              <td><a href="">Gordana Durkovic-Pescador</a></td>
+              <td>154.0</td>
+              <td><a href="">Ongoing Volunteers</a></td>
+              <td><a href=""><img src="props.png" width=35 height=35></a></td>
+            </tr>
+            <tr>
+              <td><a href=""><img src="default-profile-pic-exsmall.png"></a></td>
+              <td><a href="">Anusha Gururajan</a></td>
+              <td>100.0</td>
+              <td><a href="">Ongoing Volunteers</a></td>
+              <td><a href=""><img src="props.png" width=35 height=35></a></td>
+            </tr>
+            <tr>
+              <td><a href=""><img src="default-profile-pic-exsmall.png"></a></td>
+              <td><a href="">Dalin Kongseri</a></td>
+              <td>65.0</td>
+              <td><a href="">Ongoing Volunteers</a></td>
+              <td><a href=""><img src="props.png" width=35 height=35></a></td>
+            </tr>
+            <tr>
+              <td><a href=""><img src="default-profile-pic-exsmall.png"></a></td>
+              <td><a href="">Meg Schaeperkoetter Leonard</a></td>
+              <td>37.0</td>
+              <td><a href="">Summer Math Camp Counselor 2014</a></td>
+              <td><a href=""><img src="props.png" width=35 height=35></a></td>
+            </tr>
+            <tr>
+              <td><a href=""><img src="default-profile-pic-exsmall.png"></a></td>
+              <td><a href="">Harriet Sinclair</a></td>
+              <td>25.0</td>
+              <td><a href="">Summer Math Camp Counselor 2014</a></td>
+              <td><a href=""><img src="props.png" width=35 height=35></a></td>
+            </tr>
+            <tr>
+              <td><a href=""><img src="default-profile-pic-exsmall.png"></a></td>
+              <td><a href="">Tianji Pang</a></td>
+              <td>24.0</td>
+              <td><a href="">Ongoing Volunteers</a></td>
+              <td><a href=""><img src="props.png" width=35 height=35></a></td>
+            </tr>
+            <tr>
+              <td><a href=""><img src="default-profile-pic-exsmall.png"></a></td>
+              <td><a href="">Radha Pedapati</a></td>
+              <td>21.0</td>
+              <td><a href="">Summer Math Camp Counselor 2014</a></td>
+              <td><a href=""><img src="props.png" width=35 height=35></a></td>
+            </tr>
+            <tr>
+              <td><a href=""><img src="default-profile-pic-exsmall.png"></a></td>
+              <td><a href="">Amanda Lam</a></td>
+              <td>21.0</td>
+              <td><a href="">Summer Math Camp Counselor 2014</a></td>
+              <td><a href=""><img src="props.png" width=35 height=35></a></td>
+            </tr>
+            <tr>
+              <td><a href=""><img src="default-profile-pic-exsmall.png"></a></td>
+              <td><a href="">Trenton Scott</a></td>
+              <td>21.0</td>
+              <td><a href="">Summer Math Camp Counselor 2014</a></td>
+              <td><a href=""><img src="props.png" width=35 height=35></a></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+      <hr>
+
+      <footer>
+        <p>&copy; FlashVolunteer 2014</p>
+      </footer>
+    </div>
+        <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
+        <script>window.jQuery || document.write('<script src="js/vendor/jquery-1.11.0.min.js"><\/script>')</script>
+        <script type="text/javascript" src="tablesorter/jquery.tablesorter.min.js"></script> 
+        <script src="sidr/jquery.sidr.min.js"></script>
+        <script src="js/vendor/bootstrap.min.js"></script>
+
+        <script src="js/main.js"></script>
+
+        <script src="js/highcharts.js"></script>
+        <script src="js/modules/exporting.js"></script>
+        <!-- volunteer hours chart using highcharts: -->
+        <script type="text/javascript">
+          jQuery.noConflict();
+
+          (function($){ // encapsulate jQuery
+            $(document).ready(function()
+            {
+                // Callback code for buttons to switch graphs
+                $("#day-btn").click(function (event) {
+                    reset($);
+                    $("#day-btn").addClass("btn-primary");
+                    $("#org-dashboard-chart-day").removeClass("hide");
+                });
+                $("#month-btn").click(function (event) {
+                    reset($);
+                    $("#month-btn").addClass("btn-primary");
+                    $("#org-dashboard-chart-month").removeClass("hide");
+                });
+                $("#quarter-btn").click(function (event) {
+                    reset($);
+                    $("#quarter-btn").addClass("btn-primary");
+                    $("#org-dashboard-chart-quarter").removeClass("hide");
+                });
+            })
+          })(jQuery);
+
+          function reset($) {
+              $("#day-btn").removeClass("btn-primary");
+              $("#month-btn").removeClass("btn-primary");
+              $("#quarter-btn").removeClass("btn-primary");
+              $("#org-dashboard-chart-day").addClass("hide");
+              $("#org-dashboard-chart-month").addClass("hide");
+              $("#org-dashboard-chart-quarter").addClass("hide");
+          }
+        </script>
+        <script type="text/javascript">
+          jQuery.noConflict();
+
+          theme = 'default';
+
+          (function($){ // encapsulate jQuery
+            $(function () {
+              $('#org-dashboard-chart-day').highcharts({
+                  title: {
+                      text: '', //'Recent Volunteer Hours' was moved outside the chart
+                      x: -20 //center
+                  },
+                  subtitle: {
+                      text: '', //'By day' was moved outside the chart
+                      x: -20
+                  },
+                  chart: {
+                      width: 850,
+                  },
+                  xAxis: {
+                      tickInterval: 30, // draw a tick and label at approximately every month
+                      labels: {
+                        staggerLines: 2, // show labels on 2 lines staggered, instead of 1 squished together
+                      },
+                      categories: [
+'10/3/2013', '10/4', '10/5', '10/6', '10/7', '10/8', '10/9', '10/10', '10/11', '10/12', '10/13', '10/14', '10/15', '10/16', '10/17', '10/18', '10/19', '10/20', '10/21', '10/22', '10/23', '10/24', '10/25', '10/26', '10/27', '10/28', '10/29', '10/30', '10/31', '11/1',
+'11/2', '11/3', '11/4', '11/5', '11/6', '11/7', '11/8', '11/9', '11/10', '11/11', '11/12', '11/13', '11/14', '11/15', '11/16', '11/17', '11/18', '11/19', '11/20', '11/21', '11/22', '11/23', '11/24', '11/25', '11/26', '11/27', '11/28', '11/29', '11/30', '12/1',
+'12/2', '12/3', '12/4', '12/5', '12/6', '12/7', '12/8', '12/9', '12/10', '12/11', '12/12', '12/13', '12/14', '12/15', '12/16', '12/17', '12/18', '12/19', '12/20', '12/21', '12/22', '12/23', '12/24', '12/25', '12/26', '12/27', '12/28', '12/29', '12/30', '12/31/2013',
+'1/1/2014', '1/2', '1/3', '1/4', '1/5', '1/6', '1/7', '1/8', '1/9', '1/10', '1/11', '1/12', '1/13', '1/14', '1/15', '1/16', '1/17', '1/18', '1/19', '1/20', '1/21', '1/22', '1/23', '1/24', '1/25', '1/26', '1/27', '1/28', '1/29', '1/30',
+'1/31', '2/1', '2/2', '2/3', '2/4', '2/5', '2/6', '2/7', '2/8', '2/9', '2/10', '2/11', '2/12', '2/13', '2/14', '2/15', '2/16', '2/17', '2/18', '2/19', '2/20', '2/21', '2/22', '2/23', '2/24', '2/25', '2/26', '2/27', '2/28', '3/1',
+'3/2', '3/3', '3/4', '3/5', '3/6', '3/7', '3/8', '3/9', '3/10', '3/11', '3/12', '3/13', '3/14', '3/15', '3/16', '3/17', '3/18', '3/19', '3/20', '3/21', '3/22', '3/23', '3/24', '3/25', '3/26', '3/27', '3/28', '3/29', '3/30', '3/31',
+'4/1', '4/2', '4/3', '4/4', '4/5', '4/6', '4/7', '4/8', '4/9', '4/10', '4/11', '4/12', '4/13', '4/14', '4/15', '4/16', '4/17', '4/18', '4/19', '4/20', '4/21', '4/22', '4/23', '4/24', '4/25', '4/26', '4/27', '4/28', '4/29', '4/30',
+'5/1', '5/2', '5/3', '5/4', '5/5', '5/6', '5/7', '5/8', '5/9', '5/10', '5/11', '5/12', '5/13', '5/14', '5/15', '5/16', '5/17', '5/18', '5/19', '5/20', '5/21', '5/22', '5/23', '5/24', '5/25', '5/26', '5/27', '5/28', '5/29', '5/30',
+'5/31', '6/1', '6/2', '6/3', '6/4', '6/5', '6/6', '6/7', '6/8', '6/9', '6/10', '6/11', '6/12', '6/13', '6/14', '6/15', '6/16', '6/17', '6/18', '6/19', '6/20', '6/21', '6/22', '6/23', '6/24', '6/25', '6/26', '6/27', '6/28', '6/29',
+'6/30', '7/1', '7/2', '7/3', '7/4', '7/5', '7/6', '7/7', '7/8', '7/9', '7/10', '7/11', '7/12', '7/13', '7/14', '7/15', '7/16', '7/17', '7/18', '7/19', '7/20', '7/21', '7/22', '7/23', '7/24', '7/25', '7/26', '7/27', '7/28', '7/29',
+'7/30', '7/31', '8/1', '8/2', '8/3', '8/4', '8/5', '8/6', '8/7', '8/8', '8/9', '8/10', '8/11', '8/12', '8/13', '8/14', '8/15', '8/16', '8/17', '8/18', '8/19', '8/20', '8/21', '8/22', '8/23', '8/24', '8/25', '8/26', '8/27', '8/28',
+'8/29', '8/30', '8/31', '9/1', '9/2', '9/3', '9/4', '9/5', '9/6', '9/7', '9/8', '9/9', '9/10', '9/11', '9/12', '9/13', '9/14', '9/15', '9/16', '9/17', '9/18', '9/19', '9/20', '9/21', '9/22', '9/23', '9/24', '9/25', '9/26', '9/27',
+'9/28', '9/29', '9/30', '10/1', '10/2/2014']
+                  },
+                  yAxis: {
+                      title: {
+                          text: 'Hours'
+                      },
+                      plotLines: [{
+                          value: 0,
+                          width: 1,
+                          color: '#808080'
+                      }]
+                  },
+                  tooltip: {
+                      valueSuffix: ' hours'
+                  },
+                  legend: {
+                      enabled: false
+                      // Below defaults not needed, since we disabled the legend:
+                      // layout: 'vertical',
+                      // align: 'right',
+                      // verticalAlign: 'middle',
+                      // borderWidth: 0
+                  },
+                  credits: false,
+                  series: [{
+                      name: 'Hours',
+                      data: [
+0, 0, 0, 0, 0, 0, 0, 35, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 422.5, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 32.5, 0, 0, 0, 0, 15, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 20.5, 0, 0, 0, 0, 0, 0, 0, 0, 39, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 22.5, 0, 94, 0, 0, 0, 0, 0, 20, 0, 0, 0, 0, 0, 0, 33, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 27, 0, 0, 0, 0, 0, 21, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 20.5, 0, 0, 0, 0, 0, 0, 0, 35.5, 0, 0, 399.5, 0, 0, 0, 23, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 32, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 11, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 61.5, 0, 0, 0, 0, 0, 0, 40, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 40, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+                      ]
+                  }]
+              });
+              $('#org-dashboard-chart-month').highcharts({
+                  title: {
+                      text: '', //'Recent Volunteer Hours' was moved outside the chart
+                      x: -20 //center
+                  },
+                  subtitle: {
+                      text: '', //'By month' was moved outside the chart
+                      x: -20
+                  },
+                  xAxis: {
+                      categories: ['Nov','Dec 13','Jan 14', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
+                          'Jul', 'Aug', 'Sep', 'Oct']
+                  },
+                  yAxis: {
+                      title: {
+                          text: 'Hours'
+                      },
+                      plotLines: [{
+                          value: 0,
+                          width: 1,
+                          color: '#808080'
+                      }]
+                  },
+                  tooltip: {
+                      valueSuffix: ' hours'
+                  },
+                  legend: {
+                      enabled: false
+                      // Below defaults not needed, since we disabled the legend:
+                      // layout: 'vertical',
+                      // align: 'right',
+                      // verticalAlign: 'middle',
+                      // borderWidth: 0
+                  },
+                  credits: false,
+                  series: [{
+                      name: 'Hours',
+                      data: [422.5, 47.5, 20.5, 155.5, 101, 478.5, 32, 11, 102.5, 40, 0, 0]
+                  }]
+              });
+              $('#org-dashboard-chart-quarter').highcharts({
+                  title: {
+                      text: '', //'Recent Volunteer Hours' was moved outside the chart
+                      x: -20 //center
+                  },
+                  subtitle: {
+                      text: '', //'By quarter' was moved outside the chart
+                      x: -20
+                  },
+                  xAxis: {
+                      categories: ['Q3 FY2014','Q4 FY2014 (Jun-Aug)','Q1 FY2015','Q2 FY2015']
+                  },
+                  yAxis: {
+                      title: {
+                          text: 'Hours'
+                      },
+                      plotLines: [{
+                          value: 0,
+                          width: 1,
+                          color: '#808080'
+                      }]
+                  },
+                  tooltip: {
+                      valueSuffix: ' hours'
+                  },
+                  legend: {
+                      enabled: false
+                      // Below defaults not needed, since we disabled the legend:
+                      // layout: 'vertical',
+                      // align: 'right',
+                      // verticalAlign: 'middle',
+                      // borderWidth: 0
+                  },
+                  credits: false,
+                  series: [{
+                      name: 'Hours',
+                      data: [611.5,153.5,0.0,0.0]
+                  }]
+              });
+              $('#org-dashboard-chart-events').highcharts({
+                  chart: {
+                      zoomType: 'xy',
+                      height: 700,
+                  },
+                  title: {
+                      text: 'Recent Events'
+                  },
+                  xAxis: [{
+                      categories: [
+'Math &Science Mashup 2014 MLK 032514', 'Math & Science Mashup 2014 SWB&GC 033114', 'Math & Science Mashup 2014 Gregory Heights Elementary 041514', 'Math & Science Mashup 2014 Sunnycrest El 042314', 'Math & Science Mashup 2014 K-5 STEM at Boren 043014', 'Math & Science Mashup 2014 Magnuson CC 052714', 'Make a Move for Math 2014 Volunteers', 'Summer Math Camp Counselor 2014', 'Eastside MathFest 2014 Volunteer Jobs', 'Ongoing Volunteers'],
+                      labels: {
+                          rotation: -52, // degrees
+                          style: {
+                              fontSize: '11.5px',
+                              fontFamily: 'Verdana, sans-serif'
+                          }
+                      },
+                  }],
+                  yAxis: [{ // Primary yAxis
+                      labels: {
+                          format: '{value} hours',
+                          style: {
+                              color: Highcharts.getOptions().colors[0]
+                          }
+                      },
+                      title: {
+                          text: 'Volunteer Time',
+                          style: {
+                              color: Highcharts.getOptions().colors[0]
+                          }
+                      }
+                  }, { // Secondary yAxis
+                      title: {
+                          text: 'Volunteer count',
+                          style: {
+                              color: Highcharts.getOptions().colors[1]
+                          }
+                      },
+                      labels: {
+                          format: '{value}',
+                          style: {
+                              color: Highcharts.getOptions().colors[1]
+                          }
+                      },
+                      opposite: true
+                  }],
+                  tooltip: {
+                      shared: true
+                  },
+                  legend: {
+                      layout: 'vertical',
+                      align: 'left',
+                      x: 120,
+                      verticalAlign: 'top',
+                      y: 100,
+                      floating: true,
+                      backgroundColor: (Highcharts.theme && Highcharts.theme.legendBackgroundColor) || '#FFFFFF'
+                  },
+                  series: [{
+                      name: 'Volunteer Time',
+                      type: 'column',
+                      data: [
+27, 21, 20.5, 35.5, 23, 32, 94, 153.5, 399.5, 513],
+                      tooltip: {
+                          valueSuffix: ' hours'
+                      }
+
+                  }, {
+                      name: 'Volunteer Count',
+                      type: 'column',
+                      yAxis: 1,
+                      data: [
+9, 7, 8, 14, 9, 11, 17, 20, 108, 14],
+                      tooltip: {
+                          valueSuffix: ''
+                      }
+                  }]
+              });
+            });
+          
+          })(jQuery);
+        </script>
+        <script type="text/javascript">
+          (function($){ // encapsulate jQuery
+            $(document).ready(function()
+            {
+              $('#simple-menu').sidr();
+              $("#orgVolunteersTable").tablesorter({
+                theme : 'blue',
+
+                headers: {
+                  // disable sorting of two columns (by index of column)
+                  0 : {
+                    // disable it by setting the property sorter to false
+                    sorter: false
+                  },
+                  4 : {
+                    sorter: false
+                  },
+                },
+                // sort on third column only, order descending
+                sortList: [[2,1],],
+              });
+              $("#orgVolunteersTableLastYear").tablesorter({
+                theme : 'blue',
+
+                headers: {
+                  // disable sorting of two columns (by index of column)
+                  0 : {
+                    // disable it by setting the property sorter to false
+                    sorter: false
+                  },
+                  4 : {
+                    sorter: false
+                  },
+                },
+                // sort on third column only, order descending
+                sortList: [[2,1],],
+              });
+            })
+          })(jQuery);
+        </script>
+        <!-- Google Analytics: change UA-XXXXX-X to be your site's ID. -->
+        <script>
+            (function(b,o,i,l,e,r){b.GoogleAnalyticsObject=l;b[l]||(b[l]=
+            function(){(b[l].q=b[l].q||[]).push(arguments)});b[l].l=+new Date;
+            e=o.createElement(i);r=o.getElementsByTagName(i)[0];
+            e.src='http://www.google-analytics.com/analytics.js';
+            r.parentNode.insertBefore(e,r)}(window,document,'script','ga'));
+            ga('create','UA-XXXXX-X');ga('send','pageview');
+        </script>
+    </body>
+</html>
